@@ -562,13 +562,13 @@ int fill_left(int x, int y, int left_x)
 
 int REDirect::rd_point(const float p[3])
 { //  Write a single pixel using the current drawing color. */	
-	// 1st extract x and cooridnates from the argument 'p'.
+  // 1st extract x and cooridnates from the argument 'p'.
 	float x_coord = p[0];
 	float y_coord = p[1];
 	//int z-coord = p[2];
 	
 	// Q: In rd_display.h, rd_write_pixel is set tp recive 2 intigers, not floats.
-	// A: Float's must be converted to int's?
+	// A: Float's must be converted to int's. Now scene 10 does not crash.
 	int x = (int)x_coord;
 	int y = (int)y_coord;
 
@@ -589,6 +589,13 @@ int REDirect::rd_line(const float start[3], const float end[3])
 	// int ending_z = end[2];
 	
 	// Put line drawing pieline here.
+	// 1. convert inout into homogenus point
+	// 2. How do we determine the flag?
+	struct pointh p;
+	p.x = 0;
+	
+	
+	line_pipeline((pointh p, bool flag);
 	
 	// Does bresenhams line drawing algo. need need to be modified to recive a Z coord?
 	
