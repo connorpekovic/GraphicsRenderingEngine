@@ -563,11 +563,16 @@ int fill_left(int x, int y, int left_x)
 int REDirect::rd_point(const float p[3])
 { //  Write a single pixel using the current drawing color. */	
 	// 1st extract x and cooridnates from the argument 'p'.
-	int x_coord = p[0];
-	int y_coord = p[1];
-	//int z-coord =p[2];
+	float x_coord = p[0];
+	float y_coord = p[1];
+	//int z-coord = p[2];
 	
-	rd_write_pixel(x_coord, y_coord, rgb_global);
+	// Q: In rd_display.h, rd_write_pixel is set tp recive 2 intigers, not floats.
+	// A: Float's must be converted to int's?
+	int x = (int)x_coord;
+	int y = (int)y_coord;
+
+	rd_write_pixel(x, y, rgb_global);
 	
 	return 0;
 	
@@ -578,14 +583,14 @@ int REDirect::rd_line(const float start[3], const float end[3])
 	/* Take the input and output points from the arguments.*/
 	int starting_x = start[0];
 	int starting_y = start[1];
-	int starting_z = start[2];
+	// int starting_z = start[2];
 	int ending_x = end[0];
 	int ending_y = end[1];
-	int ending_z = end[2];
+	// int ending_z = end[2];
 	
 	// Put line drawing pieline here.
 	
-	// Does bresenhams line drawing algo need 
+	// Does bresenhams line drawing algo. need need to be modified to recive a Z coord?
 	
 	// Envoke bresenhams line drawing algorithim
 	bresenhams_line_algorithm(starting_x, starting_y, ending_x, ending_y);
