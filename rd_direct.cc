@@ -109,10 +109,6 @@ int REDirect::rd_world_begin(void)
 	// 	clip_to_device(mainM, width, height)
 	clip_to_device(world_to_clippingM, display_xSize, display_ySize);
 	
-	
-	
-	
-	
 	//Declare frame number
 	rd_disp_init_frame(frameNumber);
 	return 0;
@@ -133,7 +129,7 @@ int REDirect::rd_frame_end(void)
 	return 0;
 }
 
-/* Welcome to the Lighting and Shading Section. */
+/* Welcome to the Lighting and Shading section. */
 
 int REDirect::rd_color(const float color[])
 {/* Use the function to change the global drawing color */
@@ -564,7 +560,6 @@ int fill_left(int x, int y, int left_x)
 	return 0;
 }
 
-
 int REDirect::rd_point(const float p[3])
 { //  Write a single pixel using the current drawing color. */	
 	// 1st extract x and cooridnates from the argument 'p'.
@@ -583,10 +578,16 @@ int REDirect::rd_line(const float start[3], const float end[3])
 	/* Take the input and output points from the arguments.*/
 	int starting_x = start[0];
 	int starting_y = start[1];
+	int starting_z = start[2];
 	int ending_x = end[0];
 	int ending_y = end[1];
+	int ending_z = end[2];
 	
-	/* Envoking Breshenham's algorithim. If not connecting to subroutinre insert code here. */
+	// Put line drawing pieline here.
+	
+	// Does bresenhams line drawing algo need 
+	
+	// Envoke bresenhams line drawing algorithim
 	bresenhams_line_algorithm(starting_x, starting_y, ending_x, ending_y);
 	
 	return 0;
