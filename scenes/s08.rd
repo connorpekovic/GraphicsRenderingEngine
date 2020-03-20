@@ -1,6 +1,6 @@
 # This is a test/example rd file
 
-Display "EdgeTest"  "Screen" "rgbsingle"
+Display "EdgeTest"  "Screen" "rgbdouble"
 Format 400 400 
 
 # Testing filling at edges

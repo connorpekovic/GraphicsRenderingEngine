@@ -29,8 +29,8 @@ int bresenhams_line_algorithm(int starting_x, int starting_y,  int ending_x, int
 int bresenhams_circle_drawer(int x, int y, int cx, int cy);
 
 //Assign2 prototpyes
+int line_pipeline(pointh& p, bool flag);
 int point_pipeline(pointh& p);
-int line_pipeline(pointh p, bool flag);
 
 using std::cout;
 using std::endl; 
@@ -41,18 +41,23 @@ float rgb_global[3] = {1, 1, 1};
 
 // Global variables pertaining to assignment 2 are declared
 // in matrix.h.
-struct xform1 mainM; // current Transformation
+struct xform1 current_transform; // current Transformation
 struct xform1 world_to_cameraM;
 struct xform1 cam_to_clipM; 
 struct xform1 world_to_clippingM; // Are you suggesting combining world_to_cameraM & cam_to_clipM
 struct xform1 clipping_to_deviceM;
+stack<pointh> move_draw_stack;
 
 // Declared in line matrix.h line 50
+// stack<xform1> transform_stack;
 
 // Homogenius points for eyepoint and look up camera
 struct pointh eye;
 struct pointh at;
 struct vec up;
+int CameraFOV;
+float near_depth;
+float far_depth;
 
 
 int REDirect::rd_display(const string& name, const string& type, const string& mode)
@@ -90,14 +95,14 @@ int REDirect::rd_world_begin(void)
 	// cout " Camera FOV is: " << fov << endl;
 
 	// 2. The current transform should be set to the identity
-	identity(mainM);
+	identity(current_transform);
 
 	// 3. The world to camera transformation can be computed using the camera eyepoint
-	world_to_camera(mainM, eye, at, up);
+	world_to_camera(current_transform, eye, at, up);
 	
 	// 4. The camera to clipping coordinate transformation matrix can be computed using the near and far clipping 
 	//		depths and the field of view.
-	// int camera_to_clip(xform1& mainM, double fov, double near, double far, double aspect)
+	// int camera_to_clip(xform1& current_transform, double fov, double near, double far, double aspect)
 	// How do I get FOV and Aspect Ratio?
 	camera_to_clip(cam_to_clipM, 45, near, far, aspect_ratio);
 	
@@ -106,7 +111,7 @@ int REDirect::rd_world_begin(void)
 	multiply(world_to_clippingM, world_to_cameraM, cam_to_clipM);
 	
 	// 6. The clipping coordinate to device coordinate transform is also computed here. 
-	// 	clip_to_device(mainM, width, height)
+	// 	clip_to_device(current_transform, width, height)
 	clip_to_device(world_to_clippingM, display_xSize, display_ySize);
 	
 	//Declare frame number
@@ -182,10 +187,12 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 // 	3. Fill leftwards main line, filling up and down as it goes.
 // 	4. Fill above main line, filling left and right as it goes.
 // 	5. Fill below main line, filling left and right as it goes.
+//  6. Call this function with pre recursive checks aginst the color matching 
+//		the seed.
 
 //  The reconstruction:
-// 1. Change these If to while loops as a main decesion maker that shoots out like a cross at a given 
-//		x y coordinate
+// 1. Change these If to while loops as a main decesion maker that shoots out 
+//     like a cross at a given x y coordinate
 // 2. Break up the flood lines into two parts.
 //	2a. Scan line - returns the length that cosecutive pixels coords to fill
 //  2b. Flood fill - Fills that legnth of pixels with color.
@@ -356,29 +363,66 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 			rd_read_pixel(x_coord, y_coord, cursor_rgb); 
 		}
 	}
-	// int rightUp_x, rightUp_y;
-	// int rightDown_x, rightDown_y;
-	// int leftUp_x, leftUp_y;
-	// int leftDown_x, leftDown_y;
 	
-	// int upRight_x, upRight_y;
-	// int upLeft_x, upLeft_y;
-	// int downRight_x, downRight_y;
-	// int downLeft_x, downLeft_y;
+	// Recursion happens.
 	
-	// Recursion
+	// 6. 
 	
-	// Impliment Pre recursive checks
+	// Impliment Pre recursive checksk
 	
-	// fillDecesionMaker(rightUp_x, rightUp_y, oldColor);
-	// fillDecesionMaker(rightDown_x, rightDown_y, oldColor);
-	// fillDecesionMaker(leftUp_x, leftUp_y, oldColor);
-	// fillDecesionMaker(leftDown_x, leftDown_y, oldColor);
+	// if ( y_coord < 0 && x_coord < display_xSize &&
+		// cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	// {
+		// fillDecesionMaker(rightUp_x, rightUp_y, oldColor);
+	// }
 	
-	// fillDecesionMaker(upRight_x, upRight_y, oldColor);
-	// fillDecesionMaker(upLeft_x, upLeft_y, oldColor);
-	// fillDecesionMaker(downRight_x, downRight_y, oldColor);
-	// fillDecesionMaker(downLeft_x, downLeft_y, oldColor);
+	// if ( y_coord < display_ySize && x_coord < display_xSize &&
+		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	// {
+		// fillDecesionMaker(rightDown_x, rightDown_y, oldColor);
+	// }
+	
+	// if ( y_coord < 0 && x_coord < 0 &&
+		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	// { 
+		// fillDecesionMaker(leftUp_x, leftUp_y, oldColor);
+	// }
+	
+	
+	// if ( y_coord < 0 && x_coord < display_xSize &&
+		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	// {
+		// fillDecesionMaker(leftDown_x, leftDown_y, oldColor);
+	// }
+	
+	
+	// if (  y_coord < 0 && x_coord < display_xSize &&
+		// cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	// {
+		// fillDecesionMaker(upRight_x, upRight_y, oldColor);
+	// }
+	
+	
+	// if ( y_coord < 0 && x_coord < 0 &&
+		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	// {
+		// fillDecesionMaker(upLeft_x, upLeft_y, oldColor);
+	// }
+	
+	
+	// if ( y_coord < display_ySize && x_coord < display_xSize &&
+		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	// {
+		// fillDecesionMaker(downRight_x, downRight_y, oldColor);
+	// }
+
+	
+	// if ( y_coord < 0 && x_coord < display_xSize &&
+		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	// {
+		// fillDecesionMaker(downLeft_x, downLeft_y, oldColor);
+	// }
+	
 
 
 	
@@ -561,46 +605,130 @@ int fill_left(int x, int y, int left_x)
 }
 
 int REDirect::rd_point(const float p[3])
-{ //  Write a single pixel using the current drawing color. */	
+{ // Write a single pixel using the current drawing color. */	
   // 1st extract x and cooridnates from the argument 'p'.
 	float x_coord = p[0];
 	float y_coord = p[1];
-	//int z-coord = p[2];
+	float z_coord = p[2];
 	
-	// Q: In rd_display.h, rd_write_pixel is set tp recive 2 intigers, not floats.
-	// A: Float's must be converted to int's. Now scene 10 does not crash.
-	int x = (int)x_coord;
-	int y = (int)y_coord;
-
-	rd_write_pixel(x, y, rgb_global);
+	// Turn input into homogeneous 
+	struct pointh point;
+	point.x = p[0]; point.y = p[1]; point.z = p[2];
+	
+	// Send into pipeline, defined just below.
+	point_pipeline(point);
 	
 	return 0;
+}
+
+// The point pipeline
+int point_pipeline(pointh& p)
+{	
+	//  1. Take a homogeneous point and transform it by the current
+	//  transform and the world to clipping transform.
 	
+	// p = p * main trandformation matrix
+	multiply(p, current_transform, p);
+	
+	// 2. The world to clipping transform.
+	// p = p * main trandformation matrix
+	multiply(p, world_to_clippingM, p);
+	
+	// 3. At this stage the resulting point (in normalized clipping coordinates) 
+	// should be tested to see if it lies in the canonical view volume (from 0 
+	// to 1 in x, y, and z).
+	// Q: What's part about the 0 to 1 about?
+	
+	// prepare boundry coordinates
+	double x = p.x;
+	double y = p.y;
+	double z = p.z;
+	double w = p.w;
+	double wx = w - x;
+	double wy = w - y;
+	double wz = w - z;	
+
+	// If any of these are negative, then we are outside the boundries.
+	// If it passes this test, the point is converted to device coordinates and plotted.
+	if ( x > 0  ||
+		 y > 0  ||
+		 z > 0  ||
+		 wx > 0 ||
+		 wy > 0 ||
+		 wz > 0  )
+		 {
+
+			// To plot these points, typecast to int's before calling rd_write_pixel
+			int X = (int)p.x;
+			int Y = (int)p.y;
+			// What about Z?
+			
+			rd_write_pixel(X, Y, rgb_global);
+		}
+		
+	return 0;	
+
+	// If it passes this test, the point is converted to device coordinates and plotted.
 }
 
 int REDirect::rd_line(const float start[3], const float end[3])
-{ // Calls bresenhams_line_algorithm
-	/* Take the input and output points from the arguments.*/
-	int starting_x = start[0];
-	int starting_y = start[1];
-	// int starting_z = start[2];
-	int ending_x = end[0];
-	int ending_y = end[1];
-	// int ending_z = end[2];
+{ // This function recived 2 points to be used in the line pipeline.
+  // Pass each homogeneous coordinate the line pipeline with move flags;
+  
+  // What should I look out for when to set the draw flag?
+
+	// 1st point going into line pipeline
+	struct pointh point1, point2;
+	point1.x = start[0];
+	point1.y = start[1];
+	// int point1.w = start[2];	
 	
-	// Put line drawing pieline here.
-	// 1. convert inout into homogenus point
-	// 2. How do we determine the flag?
-	struct pointh p;
-	p.x = 0;
+	line_pipeline(point1, false); // false = move
 	
+	// 2nd point goes into line pipeline
+	point2.x = end[0];
+	point2.y = end[1];
+	// int point2.w = end[2];
 	
-	line_pipeline((pointh p, bool flag);
+	line_pipeline(point1, false);
 	
-	// Does bresenhams line drawing algo. need need to be modified to recive a Z coord?
-	
-	// Envoke bresenhams line drawing algorithim
-	bresenhams_line_algorithm(starting_x, starting_y, ending_x, ending_y);
+	return 0;
+}
+
+// The Line pipeline
+int line_pipeline(pointh& p, bool flag)
+{
+	// False = move
+	if (flag = true)
+	{
+		move_draw_stack.push(p);
+	}
+	// True = draw
+	else
+	{
+		int starting_x = p.x;
+		int starting_y = p.y;
+		int ending_x;
+		int ending_y;
+		
+		//For each thing in the move draw stack.
+		while(!move_draw_stack.empty())
+		{
+			// Pop a point off the stack
+			//struct pointh next_point = move_draw_stack.pop(); 
+			
+			// Use that as endpoint
+			//ending_x = next_point.x;
+			//ending_y = next_point.y;
+			
+			// Envoke bresenhams line drawing algorithim
+			//bresenhams_line_algorithm(starting_x, starting_y, ending_x, ending_y);
+			
+			// Prepare starting x and y for next iteration
+			//starting_x = ending_x;
+			//tarting_y = ending_y;
+		}
+	}
 	
 	return 0;
 }
@@ -840,6 +968,7 @@ int REDirect::rd_circle(const float center[3], float radius)
 	}
 	return 0;
 }
+
 int bresenhams_circle_drawer(int x, int y, int cx, int cy)
 {
 		rd_write_pixel(x+cx,y+cy, rgb_global);
@@ -853,19 +982,102 @@ int bresenhams_circle_drawer(int x, int y, int cx, int cy)
 	return 0;
 } 
 
-int point_pipeline(pointh& p)
-{	// 1st plot the points
-
-	//  The point pipeline should take a homogeneous point and transform it by the
-	//  current transform and the world to clipping transform.
+int REDirect::rd_translate(const float p[3])
+{
+	// Takes an array of three floats, creates a translation matrix and multiplies it 
+	// by the current transform, storing the result back in the current transform
+	translate(current_transform, p[0], p[1], p[2]);
 	
-	struct pointh temp1;
-	struct pointh temp2;
-	
-	// Homogenius point multiplied by the current transform
-	//multiply(temp1, mainM, p)
-	
-	// We have mainM, how to we derive points from that?
+	return 0;
 }
 
+int REDirect::rd_scale(const float p[3])
+{
+	// Takes an array of three floats, the scale factors in x, y, and z, creates 
+	// a scale matrix and multiplies it by the current transform, storing the 
+	// result back in the current transform.
+	scale(current_transform, p[0], p[1], p[2]);
+	
+	return 0;
+}
+
+int REDirect::rd_rotate_xy(const float theta)
+{
+	// Takes a float which is the angle of rotation in degrees and creates a rotation 
+	// matrix in the xy plane. The matrix is multiplied by the current transformation
+	// matrix and the results stored back in the current transform.
+	rotate_xy(current_transform, theta);
+	
+	return 0;
+	
+}
+
+int REDirect::rd_rotate_yz(const float theta)
+{
+	// Ditto in the yz plane.
+	rotate_yz(current_transform, theta);
+	
+	return 0;
+	
+}
+
+int REDirect::rd_rotate_zx(const float theta)
+{
+	// Ditto in the yz plane.
+	rotate_zx(current_transform, theta);
+	
+	return 0;
+	
+}
+
+// Question, what input format will the parse call this as? Array of 4 floats is a guess.
+// Same goes for camera rd_camera_up and rd_clipping.
+
+int REDirect::rd_camera_eye(const float p[4])
+{ // Store the values passed in into the global pointh struct 'eye'.
+
+	eye.x = p[0];
+	eye.y = p[1];
+	eye.z = p[2];
+	eye.w = p[3];
+
+	return 0;
+}
+
+int REDirect::rd_camera_at(const float p[4])
+{ // Store globally.
+	
+	at.x = p[0];
+	at.y = p[1];
+	at.z = p[2];
+	at.w = p[3];
+	
+	return 0;
+}
+
+int REDirect::rd_camera_up(const float p[3])
+{ // Store globally.
+	
+	up.x = p[0];
+	up.y = p[1];
+	up.z = p[2];
+	
+	return 0;
+}
+
+int REDirect::rd_camera_fov(const int fov)
+{ // Store globally.
+
+	CameraFOV = fov;
+	
+	return 0;
+}
+
+ int REDirect::rd_clipping(const float p[2])
+ { // Store the values in the near and far global clipping depths respectively.
+	 near_depth = p[0];
+	 far_depth = p[1];
+	 
+	 return 0;
+ }
 

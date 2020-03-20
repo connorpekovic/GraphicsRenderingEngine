@@ -37,6 +37,19 @@ class REDirect: public RenderEngine
 	virtual int rd_point(const float p[3]);
 	virtual int rd_line(const float start[3], const float end[3]);
 	virtual int rd_circle(const float center[3], float radius);
+	
+	/* Assignment 2 */
+	virtual int rd_translate(const float p[3]);
+	virtual int rd_scale(const float p[3]);
+	virtual int rd_rotate_xy(const float theta);
+	virtual int rd_rotate_yz(const float theta);
+	virtual int rd_rotate_zx(const float theta);
+	virtual int rd_camera_eye(const float p[4]);
+	virtual int rd_camera_at(const float p[4]);
+	virtual int rd_camera_up(const float p[4]);
+	virtual int rd_camera_fov(const int fov);
+	virtual int rd_clipping(const float p[2]);
+	
 };
 
 #endif /* RD_ENGINE_DIRECT_H */

@@ -49,7 +49,6 @@ struct xform1 {
 // Represnts the transformation stack.
 stack<xform1> transform_stack;
 
-
 //  1.
 //  Multiplies a scalar by a point and returns a point.
 int multiply(pointh &p_result, float scalar, pointh &p_input)
@@ -424,7 +423,7 @@ int scale(xform1& mainM, double sx, double sy, double sz)
 	// Declare working variables.
 	struct xform1 transformMatrix, scaleM;
 	
-	// Preparing the working transformation matrix.
+	// Transformation matrix is a temp variable.
 	copy_matrix(transformMatrix, mainM);
 	
 	// Prepare the scale matrix
@@ -465,7 +464,7 @@ int rotate_xy(xform1& mainM, double theta)
 
 // 9.
 // Changes m1 by multiplying on the right by a rotation matrix using 
-// rotation of y towards z. Theta is given in degrees.
+//  rotation of y towards z. Theta is given in degrees.
 int rotate_yz(xform1& mainM, double theta)
 {
 	struct xform1 transformM, rotateM;
@@ -506,7 +505,7 @@ int rotate_zx(xform1& mainM, double theta)
 }
 
 // 11.
-// World to Camera
+//  World to Camera
 int world_to_camera(xform1& mainM, pointh eye, pointh atIn, vec up)
 {
 	
