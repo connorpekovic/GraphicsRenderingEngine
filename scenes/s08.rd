@@ -1,6 +1,6 @@
 # This is a test/example rd file
 
-Display "EdgeTest"  "Screen" "rgbdouble"
+Display "EdgeTest"  "PNM" "rgb"
 Format 400 400 
 
 # Testing filling at edges
@@ -44,47 +44,47 @@ Line 395 399 0 0 5 0
 Line 295 399 0 95 0 0
 Line 305 399 0 105 0 0 
 
-Color 1.0 0.5 0.5
-Fill 250 5 0
+#Color 1.0 0.5 0.5
+#Fill 250 5 0
 
-Color 1.0 0.7 0.5
-Fill 395 50 0
+#Color 1.0 0.7 0.5
+#Fill 395 50 0
 
-Color 1.0 1.0 0.5
-Fill 395 250 0
+#Color 1.0 1.0 0.5
+#Fill 395 250 0
 
-Color 0.8 1.0 0.5
-Fill 350 395 0
+#Color 0.8 1.0 0.5
+#Fill 350 395 0
 
-Color 0.5 1.0 0.5
-Fill 150 395 0
+#Color 0.5 1.0 0.5
+#Fill 150 395 0
 
-Color 0.5 1.0 0.7
-Fill 5 350 0
+#Color 0.5 1.0 0.7
+#Fill 5 350 0
 
-Color 0.5 1.0 1.0
-Fill 5 150 0
+#Color 0.5 1.0 1.0
+#Fill 5 150 0
 
-Color 0.5 0.7 1.0
-Fill 50 5 0
+#Color 0.5 0.7 1.0
+#Fill 50 5 0
 
-Color 0.5 0.5 1.0
-Fill 350 5 0
+#Color 0.5 0.5 1.0
+#Fill 350 5 0
 
-Color 0.7 0.5 1.0
-Fill 395 150 0
+#Color 0.7 0.5 1.0
+#Fill 395 150 0
 
-Color 1.0 0.5 1.0
-Fill 395 350 0
+#Color 1.0 0.5 1.0
+#Fill 395 350 0
 
-Color 1.0 0.5 0.7
-Fill 250 395 0
+#Color 1.0 0.5 0.7
+#Fill 250 395 0
 
-Color 0.5 0.5 0.5
-Fill 50 395 0
+#Color 0.5 0.5 0.5
+#Fill 50 395 0
 
-Color 0.6 0.6 0.6
-Fill 5 250 0
+#Color 0.6 0.6 0.6
+#Fill 5 250 0
 
 Color 0.8 0.8 0.8
 Fill 5 50 0

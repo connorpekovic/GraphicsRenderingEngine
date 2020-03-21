@@ -245,7 +245,7 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 			top_y = scan_up(x_coord, y_coord, oldColor);
 			fill_up(x_coord, y_coord, top_y);
 			rightUp_x = x_coord;
-			rightUp_y = y_coord + top_y; // Wouldn't be dumb to check these values.
+			rightUp_y = y_coord; //+ top_y; // Wouldn't be dumb to check these values.
 
 			// Fill span below
 			bottom_y = scan_down(x_coord, y_coord, oldColor);
@@ -266,7 +266,7 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 	y_coord = y;
 	rd_read_pixel(x_coord, y_coord, cursor_rgb);
 	
-	//If the rightwards pixel is the old color that needs to get filled.
+	//If the leftwards pixel is the old color that needs to get filled.
 	if (cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
 	{
 		// While x is within bounds and the cursor is the same color as the old color.
@@ -329,15 +329,14 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 		}
 	}
 	
-	
 	// 	5. Fill below main line, filling left and right as it goes.
 	
-	//Priming read for left side.
+	// Priming read for left side.
 	x_coord = x;
 	y_coord = y - 1;
 	rd_read_pixel(x_coord, y_coord, cursor_rgb);
 	
-	//If the rightwards pixel is the old color that needs to get filled.
+	// If the rightwards pixel is the old color that needs to get filled.
 	if (cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
 	{
 		// While x is within bounds and the cursor is the same color as the old color.
@@ -370,26 +369,21 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 	
 	// Impliment Pre recursive checksk
 	
-	// if ( y_coord < 0 && x_coord < display_xSize &&
+	// if ( rightUp_y > 0 && rightUp_x < display_xSize &&
 		// cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
 	// {
 		// fillDecesionMaker(rightUp_x, rightUp_y, oldColor);
 	// }
 	
-	// if ( y_coord < display_ySize && x_coord < display_xSize &&
-		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
-	// {
-		// fillDecesionMaker(rightDown_x, rightDown_y, oldColor);
-	// }
 	
-	// if ( y_coord < 0 && x_coord < 0 &&
-		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
-	// { 
-		// fillDecesionMaker(leftUp_x, leftUp_y, oldColor);
-	// }
+	if ( y_coord < 0 && x_coord < 0 &&
+		 cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+	{  	
+		fillDecesionMaker(leftUp_x, leftUp_y, oldColor);
+	}
 	
-	
-	// if ( y_coord < 0 && x_coord < display_xSize &&
+	// Let's back the y_coord up 1.	
+	// if ( leftDown_y > 0 && leftDown_x < display_xSize &&
 		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
 	// {
 		// fillDecesionMaker(leftDown_x, leftDown_y, oldColor);
@@ -615,8 +609,10 @@ int REDirect::rd_point(const float p[3])
 	struct pointh point;
 	point.x = p[0]; point.y = p[1]; point.z = p[2];
 	
+	rd_write_pixel(x_coord, y_coord, rgb_global);
+	
 	// Send into pipeline, defined just below.
-	point_pipeline(point);
+	// point_pipeline(point);
 	
 	return 0;
 }
@@ -674,6 +670,8 @@ int point_pipeline(pointh& p)
 int REDirect::rd_line(const float start[3], const float end[3])
 { // This function recived 2 points to be used in the line pipeline.
   // Pass each homogeneous coordinate the line pipeline with move flags;
+  
+  bresenhams_line_algorithm(start[0], start[1], end[0], end[1]);
   
   // What should I look out for when to set the draw flag?
 
