@@ -199,7 +199,7 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 // 3. At the end of all 4 while loops for fillDecesionMaker, call more fill desesion makers
 // At the last known NE SE SW NW points.
 	
-	std::cout << std::endl << "Fill decesion maker has been called" << std::endl;
+	//std::cout << std::endl << "Fill decesion maker has been called" << std::endl;
 	
 	//Declaring working variables
 	int x_coord = x;
@@ -245,13 +245,13 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 			top_y = scan_up(x_coord, y_coord, oldColor);
 			fill_up(x_coord, y_coord, top_y);
 			rightUp_x = x_coord;
-			rightUp_y = y_coord; //+ top_y; // Wouldn't be dumb to check these values.
+			rightUp_y = top_y; //+ top_y; // Wouldn't be dumb to check these values.
 
 			// Fill span below
 			bottom_y = scan_down(x_coord, y_coord, oldColor);
 			fill_down(x_coord, y_coord, bottom_y);
 			rightDown_x = x_coord;
-			rightDown_y = y_coord - bottom_y;
+			rightDown_y = bottom_y;
 			
 			x_coord++;
 			
@@ -281,13 +281,13 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 			top_y = scan_up(x_coord, y_coord, oldColor);
 			fill_up(x_coord, y_coord, top_y);
 			leftUp_x = x_coord;
-			leftUp_y = y_coord + top_y;
+			leftUp_y = top_y;
 
 			// Fill span below
 			bottom_y = scan_down(x_coord, y_coord, oldColor);
 			fill_down(x_coord, y_coord, bottom_y);
 			leftDown_x = x_coord;
-			leftDown_y = y_coord - bottom_y;
+			leftDown_y = bottom_y;
 			
 			x_coord--;
 			
@@ -363,28 +363,55 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 		}
 	}
 	
-	// Recursion happens.
 	
-	// 6. 
 	
-	// Impliment Pre recursive checksk
 	
-	// if ( rightUp_y > 0 && rightUp_x < display_xSize &&
-		// cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
-	// {
-		// fillDecesionMaker(rightUp_x, rightUp_y, oldColor);
+	
+	
+	
+	
+	
+	
+	// 6. Impliment Pre recursive checks
+	
+	// The reason the recursion bomb is happening is because rd_read_pixel dosen't return
+	// accurate values.
+		
+	// The limit coordinates
+	// rd_read_pixel(175, 182, cursor_rgb); //The limit coordinates
+	// cout << " x:175 y:182 rgb => " << cursor_rgb[0] << " " << cursor_rgb[1] << " " << cursor_rgb[2] << endl; 
+	
+	rd_read_pixel(rightUp_x, rightUp_y, cursor_rgb); 
+	// cursor_rgb[0] == rgb_global[0] && cursor_rgb[1] == rgb_global[1] && cursor_rgb[2] == rgb_global[2]
+	
+	// If the right_up x is in bounds and is the seed color
+	if ( rightUp_y > 0 && rightUp_x < display_xSize &&
+		cursor_rgb[0] == rgb_global[0] && cursor_rgb[1] == rgb_global[1] && cursor_rgb[2] == rgb_global[2])
+	{
+		fillDecesionMaker(rightUp_x, rightUp_y, oldColor);
+	}
+	
+	
+	
+	
+
+	
+	
+	// Impliment Pre recursive checks
+	// rd_read_pixel(leftUp_x, leftUp_y, cursor_rgb);
+	
+	// if ( leftUp_x > 0 && leftUp_y < display_ySize )
+	// {  	
+		// fillDecesionMaker(leftUp_x, leftUp_y, oldColor);
 	// }
 	
 	
-	if ( y_coord < 0 && x_coord < 0 &&
-		 cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
-	{  	
-		fillDecesionMaker(leftUp_x, leftUp_y, oldColor);
-	}
+	// rd_read_pixel(leftDown_x, leftDown_y, cursor_rgb);
+	// cout << " rgb => " << cursor_rgb[0] << " " << cursor_rgb[1] << " " << cursor_rgb[2] << endl;
+
 	
-	// Let's back the y_coord up 1.	
 	// if ( leftDown_y > 0 && leftDown_x < display_xSize &&
-		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
+		// cursor_rgb[0] == rgb_global[0] && cursor_rgb[1] == rgb_global[1] && cursor_rgb[2] == rgb_global[2] )
 	// {
 		// fillDecesionMaker(leftDown_x, leftDown_y, oldColor);
 	// }
@@ -404,7 +431,7 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 	// }
 	
 	
-	// if ( y_coord < display_ySize && x_coord < display_xSize &&
+	// if ( downRight_y < display_ySize && downRight_x < display_xSize &&
 		 // cursor_rgb[0] == oldColor[0] && cursor_rgb[1] == oldColor[1] && cursor_rgb[2] == oldColor[2])
 	// {
 		// fillDecesionMaker(downRight_x, downRight_y, oldColor);
