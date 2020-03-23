@@ -83,35 +83,28 @@ int REDirect::rd_world_begin(void)
 { // Comments indicate excerpts from the prompt for assignment 2
 
 	// 1. Declaring values for the group of global variables to keep track of.
-	// Clipping depth
 	double near = 1.0;
 	double far = 10000000; //Should far be a long double?
 	double aspect_ratio = display_xSize / display_ySize;
 	eye.x = 0.0; eye.y = 0.0; eye.z = 0.0; eye.w = 0.0; // homogenus point
 	at.x = 0.0; at.y = 0.0; at.z = -1.0; at.w = 0.0;	// homogenus point
 	up.x = 0; up.y = 1; up.z = 0;						// vector
-	
-	// int fov = CameraFOV;
-	// cout " Camera FOV is: " << fov << endl;
+	// Clipping depth
 
-	// 2. The current transform should be set to the identity
+	// 2. The current transform should be set to the identity.
 	identity(current_transform);
 
 	// 3. The world to camera transformation can be computed using the camera eyepoint
 	world_to_camera(current_transform, eye, at, up);
 	
 	// 4. The camera to clipping coordinate transformation matrix can be computed using the near and far clipping 
-	//		depths and the field of view.
-	// int camera_to_clip(xform1& current_transform, double fov, double near, double far, double aspect)
-	// How do I get FOV and Aspect Ratio?
+	//	depths and the field of view.
 	camera_to_clip(cam_to_clipM, 45, near, far, aspect_ratio);
 	
 	// 5. These last two transformations can be combined and stored as the world to clipping coordinate matrix.
-	// world to clip = world to camera * camera to clip
-	multiply(world_to_clippingM, world_to_cameraM, cam_to_clipM);
+	multiply(world_to_clippingM, world_to_cameraM, cam_to_clipM); // world to clip = world to camera * camera to clip
 	
 	// 6. The clipping coordinate to device coordinate transform is also computed here. 
-	// 	clip_to_device(current_transform, width, height)
 	clip_to_device(world_to_clippingM, display_xSize, display_ySize);
 	
 	//Declare frame number
@@ -365,13 +358,6 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	// 6. Impliment Pre recursive checks
 	
 	// The reason the recursion bomb is happening is because rd_read_pixel dosen't return
@@ -382,7 +368,6 @@ int fillDecesionMaker(int x, int y, const float oldColor[])
 	// cout << " x:175 y:182 rgb => " << cursor_rgb[0] << " " << cursor_rgb[1] << " " << cursor_rgb[2] << endl; 
 	
 	rd_read_pixel(rightUp_x, rightUp_y, cursor_rgb); 
-	// cursor_rgb[0] == rgb_global[0] && cursor_rgb[1] == rgb_global[1] && cursor_rgb[2] == rgb_global[2]
 	
 	// If the right_up x is in bounds and is the seed color
 	if ( rightUp_y > 0 && rightUp_x < display_xSize &&
@@ -723,14 +708,20 @@ int REDirect::rd_line(const float start[3], const float end[3])
 // The Line pipeline
 int line_pipeline(pointh& p, bool flag)
 {
-	// False = move
-	if (flag = true)
+	// If move flag, push point to stack. 
+	// else, draw everything in stack.
+	
+	if (flag = 0) // Move 
 	{
 		move_draw_stack.push(p);
 	}
-	// True = draw
-	else
+	else		  // Draw
 	{
+	// Drawing from a stack of points.
+	// The line_pipeline argument pointh p will be the first point.
+	// the first point off the stack will be the second point.
+	
+	// Declare meaningful variables for bresenhams line drawing algorithim
 		int starting_x = p.x;
 		int starting_y = p.y;
 		int ending_x;
@@ -740,7 +731,7 @@ int line_pipeline(pointh& p, bool flag)
 		while(!move_draw_stack.empty())
 		{
 			// Pop a point off the stack
-			//struct pointh next_point = move_draw_stack.pop(); 
+			//struct pointh next_point = move_draw_stack.pop();    // <-- ! prolbem instruction
 			
 			// Use that as endpoint
 			//ending_x = next_point.x;
@@ -750,8 +741,8 @@ int line_pipeline(pointh& p, bool flag)
 			//bresenhams_line_algorithm(starting_x, starting_y, ending_x, ending_y);
 			
 			// Prepare starting x and y for next iteration
-			//starting_x = ending_x;
-			//tarting_y = ending_y;
+			starting_x = ending_x;
+			starting_y = ending_y;
 		}
 	}
 	
@@ -1055,8 +1046,8 @@ int REDirect::rd_rotate_zx(const float theta)
 	
 }
 
-// Question, what input format will the parse call this as? Array of 4 floats is a guess.
-// Same goes for camera rd_camera_up and rd_clipping.
+// Q: What should rd_camera...'s function header be called. 
+//    'const float p[4]' is a guess.
 
 int REDirect::rd_camera_eye(const float p[4])
 { // Store the values passed in into the global pointh struct 'eye'.
