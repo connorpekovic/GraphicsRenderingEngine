@@ -621,15 +621,15 @@ int REDirect::rd_point(const float p[3])
 	struct pointh point;
 	point.x = p[0]; point.y = p[1]; point.z = p[2];
 	
-	rd_write_pixel(x_coord, y_coord, rgb_global);
+	//rd_write_pixel(x_coord, y_coord, rgb_global);
 	
 	// Send into pipeline, defined just below.
-	// point_pipeline(point);
+	point_pipeline(point);
 	
 	return 0;
 }
 
-// The point pipeline
+// The point pipeline   q: How do I test point pipeline?
 int point_pipeline(pointh& p)
 {	
 	//  1. Take a homogeneous point and transform it by the current
@@ -680,12 +680,14 @@ int point_pipeline(pointh& p)
 }
 
 int REDirect::rd_line(const float start[3], const float end[3])
-{ // This function recived 2 points to be used in the line pipeline.
-  // Pass each homogeneous coordinate the line pipeline with move flags;
+{ // This function recived 2 points, representing the begining and
+  // the end of the line.  Concert the input to a struct that represents
+  // a homogeneous coordinate, then pass them to the line pipeline one 
+  // at a time.
+
+  // Q: What should I look out for when to set the draw flag?
   
-  bresenhams_line_algorithm(start[0], start[1], end[0], end[1]);
-  
-  // What should I look out for when to set the draw flag?
+  //bresenhams_line_algorithm(start[0], start[1], end[0], end[1]);
 
 	// 1st point going into line pipeline
 	struct pointh point1, point2;
@@ -693,57 +695,63 @@ int REDirect::rd_line(const float start[3], const float end[3])
 	point1.y = start[1];
 	// int point1.w = start[2];	
 	
-	line_pipeline(point1, false); // false = move
+	line_pipeline(point1, 0); // false = move
 	
 	// 2nd point goes into line pipeline
 	point2.x = end[0];
 	point2.y = end[1];
 	// int point2.w = end[2];
 	
-	line_pipeline(point1, false);
+	line_pipeline(point2, 1);
 	
 	return 0;
 }
 
 // The Line pipeline
 int line_pipeline(pointh& p, bool flag)
-{
-	// If move flag, push point to stack. 
-	// else, draw everything in stack.
+{ // 1. The pipeline for lines should take  two arguments, a single
+  // homogeneous point and a flag that indicates whether the point 
+  // should be moved to or drawn to
+
+	// Calls bresenhams_line_algorithm after making transformations.
+	struct pointh start_point; // old_vertex
 	
-	if (flag = 0) // Move 
+	// 2. Regardless of the flag, the point should be transformed 
+	// through object coordinates to world coordinates to clipping 
+	// coordinates.
+	
+	// 3.  At this step if the flag is set for moving only, the point 
+	// should be stored (in clipping coordinates) in a static or global
+	// variable.
+	
+	// Move 
+	if (flag == 0) 
 	{
-		move_draw_stack.push(p);
+		start_point = p;
+		//  with a poly set, use the move_draw_stack
+		//	store points, use .top() to pop off values.
 	}
-	else		  // Draw
+	// Draw
+	else		  
 	{
-	// Drawing from a stack of points.
-	// The line_pipeline argument pointh p will be the first point.
-	// the first point off the stack will be the second point.
-	
-	// Declare meaningful variables for bresenhams line drawing algorithim
-		int starting_x = p.x;
-		int starting_y = p.y;
-		int ending_x;
-		int ending_y;
+		//  4. If the line is to be drawn, then both the old_vertex (stored 
+		//	in the global variable) and the new vertex are transformed 
+		// 	to device coordinates and a line drawn between the resulting 
+		//	coordinates. 
 		
-		//For each thing in the move draw stack.
-		while(!move_draw_stack.empty())
-		{
-			// Pop a point off the stack
-			//struct pointh next_point = move_draw_stack.pop();    // <-- ! prolbem instruction
+		// Prepare for bresenhams line drawing algo.
+		int sX = start_point.x;        // Start  X
+		int sY = start_point.y;		   // Start  Y
+		int eX = p.x;  // Ending X
+		int eY = p.y;  // Ending Y
 			
-			// Use that as endpoint
-			//ending_x = next_point.x;
-			//ending_y = next_point.y;
-			
-			// Envoke bresenhams line drawing algorithim
-			//bresenhams_line_algorithm(starting_x, starting_y, ending_x, ending_y);
-			
-			// Prepare starting x and y for next iteration
-			starting_x = ending_x;
-			starting_y = ending_y;
-		}
+		// Envoke bresenhams line drawing algorithim.
+		bresenhams_line_algorithm(sX, sY, eX, eY);
+
+		// 5.  At the end of this process, the clipping coordinate version 
+		//	of the new point should be stored as the old vertex (in the 
+		// 	global variable). 
+		
 	}
 	
 	return 0;
