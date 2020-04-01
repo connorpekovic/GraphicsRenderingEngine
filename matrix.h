@@ -389,7 +389,10 @@ int pop(xform1& m1)
 // Changes m1 by multiplying on the right by a translation matrix formed by 
 // tx, ty, and tz.
 int translate(xform1& m1, double tx, double ty, double tz)
-{// This i is done by taking an identity matrix and putting
+{
+	// Tales three points and loads them into a 4x4 to multiply
+	// aginst the 
+// This is done by taking an identity matrix and putting
 //	 x, y, z, and 1 in the right column then multiplying it by the
 //   current transformation matrix.
 //	 Declare working vars.
@@ -643,4 +646,38 @@ int clip_to_device(xform1& mainM, int width, int height)
 	return 0;
 }
 
+int boundry_checks(pointh& p)
+{
+	// 3. At this stage the resulting point (in normalized clipping coordinates) 
+	// should be tested to see if it lies in the canonical view volume (from 0 
+	// to 1 in x, y, and z).
+	// Q: What's part about the 0 to 1 about?
+	
+	// prepare boundry coordinates
+	double x = p.x;
+	double y = p.y;
+	double z = p.z;
+	double w = p.w;
+	double wx = w - x;
+	double wy = w - y;
+	double wz = w - z;	
+
+	// If any of these are negative, then we are outside the boundries.
+	// If it passes this test, the point is converted to device coordinates and plotted.
+	
+	// If any of these are negative
+	if ( x < 0  ||
+		 y < 0  ||
+		 z < 0  ||
+		 wx < 0 ||
+		 wy < 0 ||
+		 wz < 0  )
+		{
+			return 0; // fail
+		}
+		else
+		{	
+			return 1; // pass
+		}
+}
 // You should implement two graphics pipelines, one for points and one for lines.

@@ -1,7 +1,7 @@
 # This is a test/example rd file
 
+Display "EdgeTest" "PNM" "rgb"
 
-Display "EdgeTest" "Screen" "rgbsingle"
 Format 400 400 
 
 # Testing filling at edges
@@ -81,14 +81,14 @@ Line 305 399 0 105 0 0
 #Color 1.0 0.5 0.7
 #Fill 250 395 0
 
-#Color 0.5 0.5 0.5
-#Fill 50 395 0
+Color 0.5 0.5 0.5
+Fill 50 395 0
 
 #Color 0.6 0.6 0.6
 #Fill 5 250 0
 
-Color 0.8 0.8 0.8
-Fill 5 50 0
+#Color 0.8 0.8 0.8
+#Fill 5 50 0
 
 WorldEnd
 FrameEnd
