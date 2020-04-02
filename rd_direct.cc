@@ -63,9 +63,6 @@ double near;
 double far;
 double aspect_ratio = display_xSize / display_ySize;
 
-// Globals for fill 
-int last_known = -1;
-
 
 int REDirect::rd_display(const string& name, const string& type, const string& mode)
 {/* The major work for this function is done behind the scenes. */
@@ -185,7 +182,7 @@ int fff4(int x, int y, const float seedColor[])
     // If (x, y) is outside the image boudaries, exit
 	if ( x >= display_xSize || x <= 0 || y >= display_ySize || y <= 0 )
 	{
-		return 0;
+		return RD_OK;
 	}
 	
     // If the color at (x, y) does not match the seed color, exit
@@ -194,7 +191,7 @@ int fff4(int x, int y, const float seedColor[])
 	
 	if (cursor_rgb[0] != seedColor[0] || cursor_rgb[1] != seedColor[1] || cursor_rgb[2] != seedColor[2])
 	{
-		return 0;
+		return RD_OK;
 	}
 
     // 2. Loop decrementing xs until xs is outside of the image boundaries
@@ -217,21 +214,7 @@ int fff4(int x, int y, const float seedColor[])
 	 // Loop x from xs to xe, calling fff4(x, y+1, seedColor)
 	while(sx <= ex)
 	{	
-		
-		// 5a. Pre recursive check
-		// Boundries
-		if ( x < display_xSize || x > 0 || y < display_ySize || y > 0 )
-		{
-			// Color
-			rd_read_pixel(x, y_coord, cursor_rgb);
-			if (cursor_rgb[0] == seedColor[0] && cursor_rgb[1] == seedColor[1] && cursor_rgb[2] == seedColor[2])
-			{
-				int tempY = y_coord;
-				fff4(sx, tempY, seedColor);
-				y_coord++;
-			}
-		}
-		
+		fff4(sx, y_coord, seedColor);
 		sx++;
 	}
 	
@@ -243,21 +226,7 @@ int fff4(int x, int y, const float seedColor[])
 	
 	while(sx <= ex)
 	{		
-		// 6a. Pre recursive check
-		// Boundries
-		if ( x < display_xSize || x > 0 || y < display_ySize || y > 0 )
-		{
-			// Color
-			rd_read_pixel(x, y_coord, cursor_rgb);
-			if (cursor_rgb[0] == seedColor[0] && cursor_rgb[1] == seedColor[1] && cursor_rgb[2] == seedColor[2])
-			{
-				last_known = y_coord;
-				fff4(sx, y_coord, seedColor);
-				y_coord = last_known;
-				y_coord--;
-				
-			}
-		}
+		fff4(sx, y_coord, seedColor);
 		sx++;
 	}
 	

@@ -1,6 +1,6 @@
 # This is a test/example rd file
 
-Display "Oh No!"  "PNM" "rgb"
+Display "Oh No!" "Screen" "rgbdouble"
 Format 500 500 
 
 # Testing filling and double buffering
@@ -18,26 +18,26 @@ WorldBegin
 
 #Face
 
-#Color 1.0 1.0 1.0
+Color 1.0 1.0 1.0
 
-#Circle  250 250 0 200
+Circle  250 250 0 200
 
-#Fill 250 250 0
+Fill 250 250 0
 
 
 # Left eye
 
-#Color 0.0 0.0 1.0
+Color 0.0 0.0 1.0
 
-#Circle 170 190 0 30
+Circle 170 190 0 30
 
-#Fill 170 190 0
+Fill 170 190 0
 
 # Right eye
 
-#Circle 330 190 0 30
+Circle 330 190 0 30
 
-#Fill 330 190 0
+Fill 330 190 0
 
 # Mouth
 
