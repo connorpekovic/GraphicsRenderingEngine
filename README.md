@@ -34,7 +34,7 @@ to a ray tracing computer graphics engine. For more information about the langua
 * Declaring vectors and various matrices as structs in matrix.h at top of file
 * World to Camera transformation matrix on in matrix.h on line 555
 * Camera to Clip transformation matrix on in matrix.h on line 604
-* Clip to Device  matrix on in matrix.h on line 673
+* Clip to Device transformation matrix on in matrix.h on line 673
 
 
 
