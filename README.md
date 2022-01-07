@@ -27,7 +27,7 @@ to a ray tracing computer graphics engine. For more information about the langua
 * Sphere primitive in C++ in rd_direct.cc on line 920. Speical thanks to https://www.songho.ca/opengl/gl_sphere.html
 * Cone primitive in C++ in rd_direct.cc on line 1005
 * Polyset in C++ (arbritary polygon) in rd_direct.cc on line 1104
-* Cylinger primitive in C++ in rd_direct.cc line 1170
+* Cylinder primitive in C++ in rd_direct.cc line 1170
 * Poinset in C++ (arbritary set of points) in rd_direct.cc on line 1315
 
 **Noteable linear algebra functions**
