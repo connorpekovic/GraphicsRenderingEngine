@@ -32,7 +32,6 @@ to a ray tracing computer graphics engine. For more information about the langua
 
 **Noteable linear algebra functions**
 * Declaring vectors and various matrices as structs in matrix.h at top of file
-* 4x4 time 4x4 [4x4 * 4x4] matrix in matrix.h on line 385
 * World to Camera transformation matrix on in matrix.h on line 555
 * Camera to Clip transformation matrix on in matrix.h on line 604
 * Clip to Device  matrix on in matrix.h on line 673
