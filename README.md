@@ -18,7 +18,7 @@ using the University of Utah style old school transformation pipeline described 
 to a ray tracing computer graphics engine. For more information about the language, visit this courses [homepage](http://graphics.cs.niu.edu/).
 
 **Noteable 2D algorithms**
-* 2D four-connected fill algorithm named the Four Fast Flood Fill by the professor who perscribed it in rd_direct.cc on line 118
+* 2D four-connected fill algorithm named the Four Fast Flood Fill in rd_direct.cc on line 118
 * Bresenhams line algorithm in rd_direct.cc on line number 499
 
 **Noteable 3D algorithms**
