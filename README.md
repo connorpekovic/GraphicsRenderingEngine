@@ -4,11 +4,6 @@
 
 Look in the folder 'Output gallery'
 
-**Usage**
-
-Mac users: works, no need to install extra packages
-
-Windows users: follow these cygwin installation [instructions](http://graphics.cs.niu.edu/csci631/cyginstall.html) 
 
 **Description**
 
@@ -36,6 +31,8 @@ to a ray tracing computer graphics engine. For more information about the langua
 * Camera to Clip transformation matrix on in matrix.h on line 604
 * Clip to Device transformation matrix on in matrix.h on line 673
 
+**Usage**
 
+Windows users: follow these cygwin installation [instructions](http://graphics.cs.niu.edu/csci631/cyginstall.html) 
 
-
+Mac users: It just works, no need to install extra packages
