@@ -1,4 +1,4 @@
-# rd_view: Computer graphics engine in c++.
+# rd_view: Computer graphics engine in C++.
 
 **Sample output**
 
