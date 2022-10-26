@@ -25,11 +25,11 @@ to a ray tracing computer graphics engine. For more information about the langua
 * Cylinder primitive in C++ in rd_direct.cc line 1170
 * Poinset in C++ (arbritary set of points) in rd_direct.cc on line 1315
 
-**Noteable linear algebra functions**
-* Declaring vectors and various matrices as structs in matrix.h at top of file
+**Noteable computer graphics theroms implimented**
 * World to Camera transformation matrix on in matrix.h on line 555
 * Camera to Clip transformation matrix on in matrix.h on line 604
 * Clip to Device transformation matrix on in matrix.h on line 673
+* Declaring vectors and various matrices as structs in matrix.h at top of file
 
 **Usage**
 
