@@ -2,12 +2,12 @@
 
 **Sample output**
 
-Look in the folder 'Output gallery'
+Start by looking at some output in the 'Output gallery' folder.
 
 
 **Description**
 
-This source code for a computer graphics rendering engine written in C++. This program impliments some of fundementels of
+This is source code for a computer graphics rendering engine written in C++. This program impliments some of fundementels of
 computer graphics. Notable contents are listed below. The jist of this program is that it renders a collection of primitives
 using a transform-clip-view graphics pipeline described in the file above named 'High level overview'. This is a direct rendering computer graphics engine as opposed
 to a ray tracing computer graphics engine. For more information about the language, visit this courses [homepage](http://graphics.cs.niu.edu/).
